@@ -1,6 +1,7 @@
 package theOnlyPackage;
 
 import java.awt.Color;
+import java.awt.Desktop;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.MouseInfo;
@@ -12,6 +13,9 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.ConcurrentModificationException;
 import java.util.Random;
@@ -69,13 +73,21 @@ public class AppPanel extends JPanel implements ActionListener, KeyListener, Mou
 	public static BufferedImage graph1;
 	public static BufferedImage aboutImg;
 	public static BufferedImage aboutImgC;
+	public static BufferedImage teamTreesImg;
+	public static BufferedImage teamTreesImgC;
+	public static BufferedImage rainforrestWebImg;
+	public static BufferedImage rainforrestWebImgC;
+	public static BufferedImage helpMessageImgDonate;
+
+
 
 	enum Transition {
-		TITLESTART, DONATETITLE, INFOTITLE, NONE, STARTGAME, TITLEINFO, TITLEDONATE
+		TITLESTART, DONATETITLE, INFOTITLE, NONE, STARTGAME, TITLEINFO, TITLEDONATE, GAMEGAMEOVER, TITLEABOUT,
+		 INFODONATE,  DONATEINFO
 	}
 
 	enum State {
-		TITLE, START, INFO, OPTIONS, GAME,
+		TITLE, START, INFO, OPTIONS, GAME, GAMEOVER, DONATE, ABOUT
 	}
 
 	int treenum = 0;
@@ -92,6 +104,7 @@ public class AppPanel extends JPanel implements ActionListener, KeyListener, Mou
 	ArrayList<GameButton> titleButtons;
 	ArrayList<GameButton> infoButtons;
 	ArrayList<GameButton> levelButtons;
+	ArrayList<GameButton> donateButtons;
 	GameButton backBS;
 	GameButton backBL;
 	GameButton levelsB;
@@ -103,6 +116,9 @@ public class AppPanel extends JPanel implements ActionListener, KeyListener, Mou
 	GameButton l1B;
 	GameButton xB;
 	GameButton aboutB;
+	GameButton teamtreesB;
+	GameButton rainforrestWebB;
+	GameButton donationMessageB;
 	double pollution;
 	double money;
 	int factorynum;
@@ -127,6 +143,7 @@ public class AppPanel extends JPanel implements ActionListener, KeyListener, Mou
 	ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
 	ScheduledExecutorService factoryMaker = Executors.newScheduledThreadPool(1);
 	ScheduledExecutorService treeMaker = Executors.newScheduledThreadPool(1);
+	boolean gameOver = false;
 
 	Runnable makeFactory = new Runnable() {
 		public void run() {
@@ -136,7 +153,7 @@ public class AppPanel extends JPanel implements ActionListener, KeyListener, Mou
 
 			if (makeFactoryDelay >= 1000) {
 				makeFactoryDelay = 0;
-				money -= 100;
+				money -= 50700;
 				factorynum++;
 				replaceTree(toReplaceT);
 				isReplacingTree = false;
@@ -149,12 +166,17 @@ public class AppPanel extends JPanel implements ActionListener, KeyListener, Mou
 	Runnable makeTree = new Runnable() {
 		public void run() {
 			System.out.println(toReplaceF);
-
+			if (pollution >= 100) {
+				gameOver = true;
+			}
+			if (money <= 0) {
+				gameOver = true;
+			}
 			makeTreeDelay++;
 
 			if (makeTreeDelay >= 10000) {
 				makeTreeDelay = 0;
-				money -= 200;
+				money -= 20050;
 
 				replaceFactory(toReplaceF);
 				isReplacingFactory = false;
@@ -162,13 +184,12 @@ public class AppPanel extends JPanel implements ActionListener, KeyListener, Mou
 				treeMaker.shutdownNow();
 			}
 		}
-
 	};
 	Runnable runnable = new Runnable() {
 		public void run() {
-			double pollutionRate = (factories.size() * 0.4) - (trees.size() * 0.1);
+			double pollutionRate = (factories.size() * 5.4) - (trees.size() * 3.4);
 
-			money += (factories.size() * 5.2);
+			money += (factories.size() * 2500);
 			if (pollution + pollutionRate < 0) {
 				pollution = 0;
 			} else {
@@ -215,6 +236,12 @@ public class AppPanel extends JPanel implements ActionListener, KeyListener, Mou
 			graph1 = ImageIO.read(this.getClass().getResourceAsStream("graph1.png"));
 			aboutImg = ImageIO.read(this.getClass().getResourceAsStream("About.png"));
 			aboutImgC = ImageIO.read(this.getClass().getResourceAsStream("AboutC.png"));
+			teamTreesImg = ImageIO.read(this.getClass().getResourceAsStream("TeamTrees.org.png"));
+			teamTreesImgC = ImageIO.read(this.getClass().getResourceAsStream("TeamTrees.orgC.png"));
+			rainforrestWebImg = ImageIO.read(this.getClass().getResourceAsStream("Rainforest Action Network.png"));
+			rainforrestWebImgC = ImageIO.read(this.getClass().getResourceAsStream("Rainforest Action NetworkC.png"));
+			helpMessageImgDonate = ImageIO.read(this.getClass().getResourceAsStream("HelpMessage.png"));
+
 
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -226,10 +253,10 @@ public class AppPanel extends JPanel implements ActionListener, KeyListener, Mou
 		this.startTime = System.currentTimeMillis();
 		this.elapsedTime = (System.currentTimeMillis() - startTime) / 1000;
 		quitB = new GameButton(quitTextImg, quitTextImgC, Main.WIDTH / 2, (Main.HEIGHT / 10) * 6, 112, 58, 112, 58);
-		donateB = new GameButton(donateImg, donateImgC, Main.WIDTH , (Main.HEIGHT / 10) * 4, 191, 49, 191, 49);
+		donateB = new GameButton(donateImg, donateImgC, Main.WIDTH, (Main.HEIGHT / 10) * 4, 191, 49, 191, 49);
 		startB = new GameButton(startTextImg, startTextImgC, Main.WIDTH / 2, (Main.HEIGHT / 10) * 4, 134, 51, 134, 51);
 		infoB = new GameButton(infoImg, infoImgC, Main.WIDTH / 2, (Main.HEIGHT / 10) * 5, 100, 51, 100, 51);
-		backBL = new GameButton(backImg, backImgC, Main.WIDTH / 2, (Main.HEIGHT / 10) * 4, 127, 51, 127, 51);
+		backBL = new GameButton(backImg, backImgC, Main.WIDTH / 2, (Main.HEIGHT / 10) * 5, 127, 51, 127, 51);
 		backBS = new GameButton(backImg, backImgC, Main.WIDTH / 2, (Main.HEIGHT / 10) * 5, 127, 51, 127, 51);
 		levelsB = new GameButton(levelsImg, levelsImgC, Main.WIDTH / 2, (Main.HEIGHT / 10) * 3, 172, 59, 172, 59);
 		comingSoonB = new GameButton(comingSoonImg, comingSoonImgC, Main.WIDTH / 2, (Main.HEIGHT / 10) * 4, 396, 70,
@@ -237,13 +264,22 @@ public class AppPanel extends JPanel implements ActionListener, KeyListener, Mou
 		l1B = new GameButton(l1Text, l1TextC, Main.WIDTH / 2, (Main.HEIGHT / 10) * 3, 180, 55, 180, 55);
 		xB = new GameButton(xImg, xImg, (bubblex + 756 / 3) - (134 / 4), bubbley, 134 / 4, 143 / 4, 134 / 4, 143 / 4);
 		aboutB = new GameButton(aboutImg, aboutImgC, Main.WIDTH / 2, (Main.HEIGHT / 10) * 3, 164, 51, 164, 51);
+		teamtreesB = new GameButton(teamTreesImg, teamTreesImgC, Main.WIDTH, Main.HEIGHT / 10 * 3, 387, 64, 387, 64);
+		rainforrestWebB = new GameButton(rainforrestWebImg, rainforrestWebImgC, Main.WIDTH, Main.HEIGHT / 10 * 4, 708,
+				51, 708, 51);
 		titleButtons = new ArrayList<GameButton>();
+
 		titleButtons.add(infoB);
 		titleButtons.add(quitB);
 		titleButtons.add(startB);
 		// titleButtons.add(donateB);
+		donateButtons = new ArrayList<GameButton>();
+		donateButtons.add(teamtreesB);
+		donateButtons.add(rainforrestWebB);
+		donateButtons.add(backBL);
 		titleButtons.add(aboutB);
 		infoButtons = new ArrayList<GameButton>();
+		
 		infoButtons.add(donateB);
 		infoButtons.add(backBS);
 		levelButtons = new ArrayList<GameButton>();
@@ -258,7 +294,7 @@ public class AppPanel extends JPanel implements ActionListener, KeyListener, Mou
 		for (GameButton gb : infoButtons) {
 			gb.setX(Main.WIDTH + gb.getWidth());
 		}
-		money = 700.00;
+		money = 100000.00;
 		pollution = 0.0;
 		factorynum = 0;
 
@@ -277,7 +313,7 @@ public class AppPanel extends JPanel implements ActionListener, KeyListener, Mou
 	private void drawScreen(Graphics g) {
 		switch (transitions) {
 		case STARTGAME:
-			
+
 			for (GameButton gb : titleButtons) {
 				if (gb.getX() >= 0 - gb.getWidth()) {
 					gb.setX(gb.getX() - wordMoveSpeed);
@@ -294,24 +330,84 @@ public class AppPanel extends JPanel implements ActionListener, KeyListener, Mou
 
 			}
 			for (GameButton gb : infoButtons) {
-				if (gb.getX() >= Main.WIDTH/2) {
+				if (gb.getX() >= Main.WIDTH / 2) {
 					gb.setX(gb.getX() - wordMoveSpeed);
 				}
 
 			}
+			break;
+		case INFOTITLE:
+			for (GameButton gb : titleButtons) {
+
+				if (gb.getX() <= Main.WIDTH / 2) {
+					gb.setX(gb.getX() + wordMoveSpeed);
+				}
+
+			}
+
+			for (GameButton gb : infoButtons) {
+				if (gb.getX() <= Main.WIDTH + gb.getWidth()) {
+					gb.setX(gb.getX() + wordMoveSpeed);
+				}
+
+			}
+
+			break;
 //		case INFOTITLE:
 //			for (GameButton gb : titleButtons) {
 //				if (gb.getX() >= 0 - gb.getWidth()) {
 //					gb.setX(gb.getX() - wordMoveSpeed);
 //				}
 //
-//			}for (GameButton gb : infoButtons) {
+//			}for (GameButton gb : AboutButtons) {
 //				if (gb.getX() >= 0 - gb.getWidth()) {
 //					gb.setX(gb.getX() - wordMoveSpeed);
 //				}
+//				
 //
 //			}
 //			break;
+		case GAMEGAMEOVER:
+			for (GameButton gb : titleButtons) {
+
+				if (gb.getX() <= Main.WIDTH / 2) {
+					gb.setX(gb.getX() + wordMoveSpeed);
+				}
+			}
+			currentState = State.TITLE;
+
+			break;
+		case INFODONATE:
+
+			for (GameButton gb : infoButtons) {
+				if (gb.getX() >= 0 - gb.getWidth()) {
+					gb.setX(gb.getX() - wordMoveSpeed);
+				}
+
+			}
+			for (GameButton gb : donateButtons) {
+				if (gb.getX() >= Main.WIDTH / 2) {
+					gb.setX(gb.getX() - wordMoveSpeed);
+				}
+
+			}
+
+			break;
+		case DONATEINFO:
+			for (GameButton gb : donateButtons) {
+				if (gb.getX() <= Main.WIDTH + gb.getWidth()) {
+					gb.setX(gb.getX() + wordMoveSpeed);
+				}
+
+			}
+			for (GameButton gb : infoButtons) {
+				if (gb.getX() <= Main.WIDTH / 2) {
+					gb.setX(gb.getX() + wordMoveSpeed);
+				}
+
+			}
+			break;
+
 		default:
 			break;
 		}
@@ -327,6 +423,10 @@ public class AppPanel extends JPanel implements ActionListener, KeyListener, Mou
 			break;
 		case INFO:
 			drawGameSelectionState(g);
+			break;
+		case DONATE:
+			drawGameSelectionState(g);
+			break;
 		default:
 			break;
 		}
@@ -337,15 +437,26 @@ public class AppPanel extends JPanel implements ActionListener, KeyListener, Mou
 		g.fillRect(0, 0, Main.WIDTH, Main.HEIGHT);
 		g.drawImage(AppPanel.titleImg, 0, 0, Main.WIDTH, Main.HEIGHT, null);
 		g.drawImage(AppPanel.planetaryTextImg, Main.WIDTH / 2, Main.HEIGHT / 10, 411, 109, null);
+		if (gameOver) {
+			if (money < 0) {
+				g.setFont(menuFont);
+				g.setColor(Color.orange);
+				g.drawString("You spent all your money in the game.", Main.WIDTH / 2, (Main.HEIGHT / 4) * 3);
+			} else if (pollution > 100) {
+				g.setFont(menuFont);
+				g.setColor(Color.orange);
+				g.drawString("You polluted the environment too much in the game.", Main.WIDTH / 2,
+						(Main.HEIGHT / 4) * 3);
+
+			}
+		}
 
 	}
 
 	void drawGameSelectionState(Graphics g) {
-		g.setColor(Color.cyan);
-		g.fillRect(0, 0, Main.WIDTH, Main.HEIGHT);
+
 		g.drawImage(AppPanel.titleImg, 0, 0, Main.WIDTH, Main.HEIGHT, null);
 		g.drawImage(AppPanel.planetaryTextImg, Main.WIDTH / 2, Main.HEIGHT / 10, 411, 109, null);
-		
 
 	}
 
@@ -355,7 +466,7 @@ public class AppPanel extends JPanel implements ActionListener, KeyListener, Mou
 		g.setColor(Color.green);
 		g.drawString("Trees: " + treenum, 40, 60);
 		g.drawString("Money: " + money, 40, 30);
-		g.drawString("Factories: " + factorynum, 40, 90);
+		g.drawString("Fossil Fuel Burning Factories: " + factorynum, 40, 90);
 		g.drawString("Pollution: " + pollution, 40, 120);
 		try {
 			for (Tree t : trees) {
@@ -543,6 +654,13 @@ public class AppPanel extends JPanel implements ActionListener, KeyListener, Mou
 				gb.draw(g);
 			}
 		}
+		for (GameButton gb : donateButtons) {
+			if (gb.isSelected()) {
+				gb.drawSelected(g);
+			} else {
+				gb.draw(g);
+			}
+		}
 		for (GameButton gb : infoButtons) {
 			if (gb.isSelected()) {
 				gb.drawSelected(g);
@@ -590,6 +708,15 @@ public class AppPanel extends JPanel implements ActionListener, KeyListener, Mou
 
 			gb.update();
 		}
+		for (GameButton gb : donateButtons) {
+			if (gb.getButtonBox().contains(MouseInfo.getPointerInfo().getLocation())) {
+				gb.setSelected(true);
+			} else {
+				gb.setSelected(false);
+			}
+
+			gb.update();
+		}
 		if (xB.getButtonBox().contains(MouseInfo.getPointerInfo().getLocation())) {
 			xB.setSelected(true);
 		} else {
@@ -621,7 +748,16 @@ public class AppPanel extends JPanel implements ActionListener, KeyListener, Mou
 			treenum = trees.size();
 
 		}
-
+		if (money < 0) {
+			gameOver = true;
+		}
+		if (pollution >= 100) {
+			gameOver = true;
+		}
+		if (gameOver) {
+			System.out.println("GameOver");
+			transitions = Transition.GAMEGAMEOVER;
+		}
 	}
 
 	@Override
@@ -645,12 +781,13 @@ public class AppPanel extends JPanel implements ActionListener, KeyListener, Mou
 			if (quitB.isSelected()) {
 				System.exit(0);
 			}
-			if (startB.isSelected()) {
-				transitions = Transition.STARTGAME;
-				currentState = State.GAME;
-
+			if (!gameOver) {
+				if (startB.isSelected()) {
+					transitions = Transition.STARTGAME;
+					currentState = State.GAME;
+				}
 			}
-			if(infoB.isSelected()) {
+			if (infoB.isSelected()) {
 				transitions = Transition.TITLEINFO;
 				currentState = State.INFO;
 			}
@@ -658,16 +795,50 @@ public class AppPanel extends JPanel implements ActionListener, KeyListener, Mou
 				transitions = Transition.INFOTITLE;
 				currentState = State.TITLE;
 			}
-			if(aboutB.isSelected()) {
-				transitions = Transition.TITLEINFO;
-				currentState = State.INFO;
+			if (aboutB.isSelected()) {
+				transitions = Transition.TITLEABOUT;
+				currentState = State.ABOUT;
 			}
 
 			if (backBL.isSelected()) {
 				// transitions = Transition.LEVELSSTART;
 				currentState = State.START;
 			}
+			if (donateB.isSelected()) {
 
+				transitions = Transition.INFODONATE;
+				currentState = State.DONATE;
+			}
+			if (backBL.isSelected()) {
+				transitions = Transition.DONATEINFO;
+				currentState = State.INFO;
+			}
+			if (teamtreesB.isSelected()) {
+				Desktop desktop = Desktop.getDesktop();
+				try {
+					desktop.browse(new URL("http://teamtrees.org").toURI());
+				} catch (MalformedURLException e1) {
+					e1.printStackTrace();
+				} catch (IOException e1) {
+					e1.printStackTrace();
+				} catch (URISyntaxException e1) {
+					e1.printStackTrace();
+				}
+			}
+			if (rainforrestWebB.isSelected()) {
+
+				Desktop desktop = Desktop.getDesktop();
+				try {
+					desktop.browse(new URL("https://www.ran.org/ways-to-give/").toURI());
+				} catch (MalformedURLException e1) {
+					e1.printStackTrace();
+				} catch (IOException e1) {
+					e1.printStackTrace();
+				} catch (URISyntaxException e1) {
+					e1.printStackTrace();
+				}
+
+			}
 			if (xB.isSelected()) {
 				drawTextBubble = false;
 			}
