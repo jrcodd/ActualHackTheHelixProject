@@ -2,7 +2,7 @@ package theOnlyPackage;
 
 import java.awt.Rectangle;
 
-public class Tree {
+public class Factory {
 	int x;
 	int y;
 	int width;
@@ -11,7 +11,7 @@ public class Tree {
 	Rectangle box;
 	boolean firstTime = true;
 
-	Tree(int x, int y, int width, int height) {
+	Factory(int x, int y, int width, int height) {
 		this.x = x;
 		this.y = y;
 		this.width = width;

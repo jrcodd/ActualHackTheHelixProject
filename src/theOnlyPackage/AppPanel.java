@@ -13,6 +13,10 @@ import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.concurrent.Executors;
+import java.util.concurrent.RejectedExecutionException;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 import javax.imageio.ImageIO;
 import javax.swing.JPanel;
@@ -46,6 +50,8 @@ public class AppPanel extends JPanel implements ActionListener, KeyListener, Mou
 	public static BufferedImage titleImg;
 	public static BufferedImage l1Text;
 	public static BufferedImage l1TextC;
+	public static BufferedImage textBubbleImg;
+	public static BufferedImage xImg;
 
 	enum Transition {
 		TITLESTART, STARTTITLE, OPTIONSTITLE, HELPTITLE, NONE, STARTLEVELS, LEVELSL1, LEVELSSTART
@@ -55,7 +61,7 @@ public class AppPanel extends JPanel implements ActionListener, KeyListener, Mou
 		TITLE, START, HELP, OPTIONS, GAME
 	}
 
-	int treenum = 1;
+	int treenum = 0;
 	Font menuFont;
 	Font others;
 	Color planetaryColor = new Color(51, 153, 255);
@@ -65,6 +71,7 @@ public class AppPanel extends JPanel implements ActionListener, KeyListener, Mou
 	long elapsedTimeSec;
 	long elapsedTime;
 	ArrayList<Tree> trees;
+	ArrayList<Factory> factories;
 	ArrayList<GameButton> titleButtons;
 	ArrayList<GameButton> gameSelectionButtons;
 	ArrayList<GameButton> levelButtons;
@@ -77,9 +84,57 @@ public class AppPanel extends JPanel implements ActionListener, KeyListener, Mou
 	GameButton optionsB;
 	GameButton startB;
 	GameButton l1B;
+	GameButton xB;
 	double pollution;
 	double money;
-	double factorynum;
+	int factorynum;
+	int i = 1;
+	int tRow = 1;
+	int tposW = (Main.WIDTH / 10) * i;
+	int tposH = (Main.HEIGHT / 4) * tRow;
+	int fRow = 1;
+	int fposW = (Main.WIDTH / 10) * i;
+	int fposH = (Main.HEIGHT / 4) * tRow;
+	Tree toReplaceT;
+	boolean isReplacingTree = false;
+	boolean drawTextBubble;
+	int bubblex;
+	boolean treefirsttime = true;
+	int makeFactoryDelay = 0;
+	ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
+	ScheduledExecutorService factoryMaker = Executors.newScheduledThreadPool(1);
+
+	Runnable makeFactory = new Runnable() {
+		public void run() {
+			replaceTree(toReplaceT);
+			System.out.println(toReplaceT);
+			money -= 100;
+			factorynum++;
+			isReplacingTree = false;
+			makeFactoryDelay++;
+			if (makeFactoryDelay >= 1000) {
+				makeFactoryDelay = 0;
+				factoryMaker.shutdownNow();
+			}
+		}
+
+	};
+	Runnable runnable = new Runnable() {
+		public void run() {
+			double pollutionRate = (factories.size() * 0.4) - (trees.size() * 0.1);
+
+			money += (factories.size() * 0.2);
+			if (pollutionRate < 0) {
+				if (pollution > 0) {
+					pollution += pollutionRate;
+				}
+			} else {
+				pollution += pollutionRate;
+			}
+		}
+	};
+	int bubbley;
+
 	AppPanel() {
 
 		try {
@@ -100,12 +155,15 @@ public class AppPanel extends JPanel implements ActionListener, KeyListener, Mou
 			comingSoonImg = ImageIO.read(this.getClass().getResourceAsStream("Coming Soon....png"));
 			comingSoonImgC = ImageIO.read(this.getClass().getResourceAsStream("Coming Soon...C.png"));
 			l1Text = ImageIO.read(this.getClass().getResourceAsStream("Level 1.png"));
+			textBubbleImg = ImageIO.read(this.getClass().getResourceAsStream("TextBubble.png"));
+			xImg = ImageIO.read(this.getClass().getResourceAsStream("X.png"));
+
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 		t = new Timer(0, this);
 		t.start();
-		menuFont = new Font("Arial", Font.ITALIC, 80);
+		menuFont = new Font("Arial", Font.ITALIC, 30);
 
 		this.startTime = System.currentTimeMillis();
 		this.elapsedTime = (System.currentTimeMillis() - startTime) / 1000;
@@ -120,6 +178,7 @@ public class AppPanel extends JPanel implements ActionListener, KeyListener, Mou
 		comingSoonB = new GameButton(comingSoonImg, comingSoonImgC, Main.WIDTH / 2, (Main.HEIGHT / 10) * 4, 396, 70,
 				396, 70);
 		l1B = new GameButton(l1Text, l1TextC, Main.WIDTH / 2, (Main.HEIGHT / 10) * 3, 180, 55, 180, 55);
+		xB = new GameButton(xImg, xImg, (bubblex + 756 / 3) - (134 / 4), bubbley, 134 / 4, 143 / 4, 134 / 4, 143 / 4);
 		titleButtons = new ArrayList<GameButton>();
 		titleButtons.add(helpB);
 		titleButtons.add(quitB);
@@ -133,15 +192,19 @@ public class AppPanel extends JPanel implements ActionListener, KeyListener, Mou
 		levelButtons.add(l1B);
 		levelButtons.add(backBL);
 		trees = new ArrayList<Tree>();
+		factories = new ArrayList<Factory>();
+
 		for (GameButton gb : levelButtons) {
 			gb.setX(Main.WIDTH + gb.getWidth());
 		}
 		for (GameButton gb : gameSelectionButtons) {
 			gb.setX(Main.WIDTH + gb.getWidth());
 		}
-		money = 500.0;
+		money = 500.00;
 		pollution = 0.0;
-		factorynum = 0.0;
+		factorynum = 0;
+
+		executor.scheduleAtFixedRate(runnable, 0, 1, TimeUnit.SECONDS);
 		repaint();
 
 	}
@@ -230,13 +293,65 @@ public class AppPanel extends JPanel implements ActionListener, KeyListener, Mou
 	void drawGameState(Graphics g) {
 		g.fillRect(0, 0, Main.WIDTH, Main.HEIGHT);
 		g.setFont(menuFont);
-		String treesS = Integer.toString(treenum);
 		g.setColor(Color.green);
-		g.drawString("Trees: " + treesS ,20 , 50);
-
+		g.drawString("Trees: " + treenum, 40, 60);
+		g.drawString("Money: " + money, 40, 30);
+		g.drawString("Factories: " + factorynum, 40, 90);
+		g.drawString("Pollution: " + pollution, 40, 120);
 		for (Tree t : trees) {
-			g.setColor(Color.green);
-			g.fill3DRect(t.x, t.y, t.width, t.height, true);
+			if (t.isSelected) {
+				g.setColor(Color.green);
+				g.fill3DRect(t.x, t.y, t.width, t.height, true);
+			} else {
+				g.setColor(Color.green);
+				g.fill3DRect(t.x, t.y, t.width, t.height, false);
+			}
+
+		}
+		for (Factory f : factories) {
+			if (f.isSelected) {
+				g.setColor(Color.gray);
+				g.fill3DRect(f.x, f.y, f.width, f.height, true);
+			} else {
+				g.setColor(Color.gray);
+				g.fill3DRect(f.x, f.y, f.width, f.height, false);
+			}
+
+		}
+		if (drawTextBubble) {
+			g.drawImage(textBubbleImg, bubblex, bubbley, 756 / 3, 602 / 3, null);
+			xB.draw(g);
+		}
+
+		drawTrees();
+
+	}
+
+	void replaceTree(Tree t) {
+		for (int i = 0; i < trees.size(); i++) {
+			if (trees.get(i).equals(t)) {
+				factories.add(new Factory(t.x, t.y, t.width, t.height));
+				trees.remove(i);
+				System.out.println(factories.size());
+				break;
+			}
+		}
+	}
+
+	private void drawTrees() {
+		if (tRow <= 3) {
+
+			if (i >= 10) {
+				i = 1;
+				tRow++;
+			}
+
+			tposW = (Main.WIDTH / 10) * i;
+			tposH = (Main.HEIGHT / 4) * tRow;
+			trees.add(new Tree(tposW, tposH, 20, 100));
+			treenum += 1;
+			i++;
+
 		}
 
 	}
@@ -269,7 +384,6 @@ public class AppPanel extends JPanel implements ActionListener, KeyListener, Mou
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
 		repaint();
-
 		this.elapsedTimeSec = (System.currentTimeMillis() - startTime) / 1000;
 		this.elapsedTime = (System.currentTimeMillis() - startTime);
 		for (GameButton gb : titleButtons) {
@@ -294,37 +408,49 @@ public class AppPanel extends JPanel implements ActionListener, KeyListener, Mou
 			} else {
 				gb.setSelected(false);
 			}
+
 			gb.update();
 		}
+		if (xB.getButtonBox().contains(MouseInfo.getPointerInfo().getLocation())) {
+			xB.setSelected(true);
+		} else {
+			xB.setSelected(false);
+		}
 
-		if (currentState == State.GAME) {
-			
-			if (elapsedTimeSec == treenum *5 ) {
-				trees.add(new Tree((Main.WIDTH / 10) * treenum, Main.HEIGHT / 2, 20, 100));
-				treenum += 1;
+		for (int i = 0; i < trees.size(); i++) {
+			if (trees.get(i).box.contains(MouseInfo.getPointerInfo().getLocation())) {
+				if (treefirsttime) {
+					bubblex = (trees.get(i).x - 756 / 6) + (trees.get(i).width / 2);
+					bubbley = trees.get(i).y - 602 / 3;
+					drawTextBubble = true;
+					treefirsttime = false;
+					xB = new GameButton(xImg, xImg, (bubblex + 756 / 3) - (134 / 4), bubbley, 134 / 4, 143 / 4, 134 / 4,
+							143 / 4);
+				}
+				trees.get(i).isSelected = true;
+			} else {
+				trees.get(i).isSelected = false;
+			}
 
-
-			} 
-			
+			factorynum = factories.size();
+			treenum = trees.size();
 
 		}
+
 	}
 
 	@Override
 	public void mouseClicked(MouseEvent arg0) {
-		// TODO Auto-generated method stub
 
 	}
 
 	@Override
 	public void mouseEntered(MouseEvent arg0) {
-		// TODO Auto-generated method stub
 
 	}
 
 	@Override
 	public void mouseExited(MouseEvent arg0) {
-		// TODO Auto-generated method stub
 
 	}
 
@@ -351,14 +477,30 @@ public class AppPanel extends JPanel implements ActionListener, KeyListener, Mou
 			if (levelsB.isSelected()) {
 				transitions = Transition.STARTLEVELS;
 				currentState = State.GAME;
-				
+
+			}
+			if (xB.isSelected()) {
+				drawTextBubble = false;
+			}
+			for (Tree t : trees) {
+				if (t.isSelected) {
+					if (!isReplacingTree) {
+						toReplaceT = t;
+						try {
+							factoryMaker.scheduleAtFixedRate(makeFactory, 0, 1, TimeUnit.MILLISECONDS);
+						} catch (RejectedExecutionException f) {
+
+						}
+						isReplacingTree = true;
+						break;
+					}
+				}
 			}
 		}
 	}
 
 	@Override
 	public void mouseReleased(MouseEvent arg0) {
-		// TODO Auto-generated method stub
 
 	}
 
@@ -371,13 +513,11 @@ public class AppPanel extends JPanel implements ActionListener, KeyListener, Mou
 
 	@Override
 	public void keyReleased(KeyEvent arg0) {
-		// TODO Auto-generated method stub
 
 	}
 
 	@Override
 	public void keyTyped(KeyEvent arg0) {
-		// TODO Auto-generated method stub
 
 	}
 

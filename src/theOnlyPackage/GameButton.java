@@ -18,7 +18,6 @@ public class GameButton {
 	private boolean show;
 
 	GameButton(BufferedImage img, BufferedImage imgC, int x, int y, int width, int height, int widthC, int heightC) {
-		this.setButtonBox(new Rectangle(x, y, width, height));
 		this.x = x;
 		this.y = y;
 		this.width = width;
@@ -28,6 +27,8 @@ public class GameButton {
 		this.img = img;
 		this.imgC = imgC;
 		show = true;
+		this.setButtonBox(new Rectangle(x, y, width, height));
+
 	}
 
 	void draw(Graphics g) {
