@@ -255,17 +255,17 @@ public class AppPanel extends JPanel implements ActionListener, KeyListener, Mou
 			aboutImgC = ImageIO.read(this.getClass().getResourceAsStream("AboutC.png"));
 			teamTreesImg = ImageIO.read(this.getClass().getResourceAsStream("TeamTrees.org.png"));
 			teamTreesImgC = ImageIO.read(this.getClass().getResourceAsStream("TeamTrees.orgC.png"));
-			rainforrestWebImg = ImageIO.read(this.getClass().getResourceAsStream("Rainforest Action Network.png"));
-			rainforrestWebImgC = ImageIO.read(this.getClass().getResourceAsStream("Rainforest Action NetworkC.png"));
-			oneTreeImg = ImageIO.read(this.getClass().getResourceAsStream("One Tree Planted.png"));
-			oneTreeImgC = ImageIO.read(this.getClass().getResourceAsStream("One Tree PlantedC.png"));
+			rainforrestWebImg = ImageIO.read(this.getClass().getResourceAsStream("RainforestActionNetwork.png"));
+			rainforrestWebImgC = ImageIO.read(this.getClass().getResourceAsStream("RainforestActionNetworkC.png"));
+			oneTreeImg = ImageIO.read(this.getClass().getResourceAsStream("OneTreePlanted.png"));
+			oneTreeImgC = ImageIO.read(this.getClass().getResourceAsStream("OneTreePlantedC.png"));
 			helpMessageImgDonate = ImageIO.read(this.getClass().getResourceAsStream("InfoText.png"));
-			plantForThePlanetImg = ImageIO.read(this.getClass().getResourceAsStream("Plant For The Planet.png"));
-			plantForThePlanetImgC = ImageIO.read(this.getClass().getResourceAsStream("Plant For The PlanetC.png"));
-			natureConImg = ImageIO.read(this.getClass().getResourceAsStream("The Nature Conservancy.png"));
-			natureConImgC = ImageIO.read(this.getClass().getResourceAsStream("The Nature ConservancyC.png"));
+			plantForThePlanetImg = ImageIO.read(this.getClass().getResourceAsStream("PlantForThePlanet.png"));
+			plantForThePlanetImgC = ImageIO.read(this.getClass().getResourceAsStream("PlantForThePlanetC.png"));
+			natureConImg = ImageIO.read(this.getClass().getResourceAsStream("TheNatureConservancy.png"));
+			natureConImgC = ImageIO.read(this.getClass().getResourceAsStream("TheNatureConservancyC.png"));
 			infoTextImg = ImageIO.read(this.getClass().getResourceAsStream("donationInfo.png"));
-			logoImg = ImageIO.read(this.getClass().getResourceAsStream("logo.png"));
+			logoImg = ImageIO.read(this.getClass().getResourceAsStream("Logo.png"));
 			AboutL1Img = ImageIO.read(this.getClass().getResourceAsStream("AboutL1.png"));
 			AboutL2Img = ImageIO.read(this.getClass().getResourceAsStream("AboutL2.png"));
 			AboutL3Img = ImageIO.read(this.getClass().getResourceAsStream("AboutL3.png"));
@@ -278,8 +278,8 @@ public class AppPanel extends JPanel implements ActionListener, KeyListener, Mou
 			AboutL10Img = ImageIO.read(this.getClass().getResourceAsStream("AboutL10.png"));
 			AboutL11Img = ImageIO.read(this.getClass().getResourceAsStream("AboutL11.png"));
 			AboutL12Img = ImageIO.read(this.getClass().getResourceAsStream("AboutL12.png"));
-			howToPlayImg = ImageIO.read(this.getClass().getResourceAsStream("How To Play.png"));
-			howToPlayImgC = ImageIO.read(this.getClass().getResourceAsStream("How To PlayC.png"));
+			howToPlayImg = ImageIO.read(this.getClass().getResourceAsStream("HowToPlay.png"));
+			howToPlayImgC = ImageIO.read(this.getClass().getResourceAsStream("HowToPlayC.png"));
 
 		} catch (IOException e) {
 			// if any ioExceptions were found
