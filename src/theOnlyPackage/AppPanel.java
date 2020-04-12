@@ -291,42 +291,67 @@ public class AppPanel extends JPanel implements ActionListener, KeyListener, Mou
 
 		this.startTime = System.currentTimeMillis();
 		this.elapsedTime = (System.currentTimeMillis() - startTime) / 1000;
-		quitB = new GameButton(quitTextImg, quitTextImgC, Main.WIDTH / 2, (Main.HEIGHT / 10) * 6, 112, 58, 112, 58);
-		donateB = new GameButton(donateImg, donateImgC, Main.WIDTH, (Main.HEIGHT / 10) * 7, 191, 49, 191, 49);
-		startB = new GameButton(startTextImg, startTextImgC, Main.WIDTH / 2, (Main.HEIGHT / 10) * 4, 134, 51, 134, 51);
-		infoB = new GameButton(infoImg, infoImgC, Main.WIDTH / 2, (Main.HEIGHT / 10) * 5, 100, 51, 100, 51);
-		backBL = new GameButton(backImg, backImgC, Main.WIDTH / 2, (Main.HEIGHT / 10) * 7, 127, 51, 127, 51);
-		backBS = new GameButton(backImg, backImgC, Main.WIDTH / 2, (Main.HEIGHT / 10) * 8, 127, 51, 127, 51);
-		backBL = new GameButton(backImg, backImgC, Main.WIDTH / 2, (Main.HEIGHT / 10) * 7, 127, 51, 127, 51);
-		backBA = new GameButton(backImg, backImgC, (Main.WIDTH / 15) * 10, (Main.HEIGHT / 15) * 14, 127, 51, 127, 51);
-		howToPlayB = new GameButton(howToPlayImg, howToPlayImgC, (Main.WIDTH / 2), (Main.HEIGHT / 15), 327, 64, 327,
-				64);
-		aboutB = new GameButton(aboutImg, aboutImgC, Main.WIDTH / 2, (Main.HEIGHT / 10) * 3, 164, 51, 164, 51);
-		teamtreesB = new GameButton(teamTreesImg, teamTreesImgC, Main.WIDTH, Main.HEIGHT / 10 * 4, 387, 64, 387, 64);
+		quitB = new GameButton(quitTextImg, quitTextImgC, Main.WIDTH / 2, (Main.HEIGHT / 10) * 6, 112 / 6 * 5,
+				58 / 6 * 5, 112 / 6 * 5, 58 / 6 * 5);
+		donateB = new GameButton(donateImg, donateImgC, Main.WIDTH, (Main.HEIGHT / 10) * 7, 191 / 6 * 5, 49 / 6 * 5,
+				191 / 6 * 5, 49 / 6 * 5);
+		startB = new GameButton(startTextImg, startTextImgC, Main.WIDTH / 2, (Main.HEIGHT / 10) * 4, 134 / 6 * 5,
+				51 / 6 * 5, 134 / 6 * 5, 51 / 6 * 5);
+		infoB = new GameButton(infoImg, infoImgC, Main.WIDTH / 2, (Main.HEIGHT / 10) * 5, 100 / 6 * 5, 51 / 6 * 5,
+				100 / 6 * 5, 51 / 6 * 5);
+		backBL = new GameButton(backImg, backImgC, Main.WIDTH / 2, (Main.HEIGHT / 10) * 7, 127 / 6 * 5, 51 / 6 * 5,
+				127 / 6 * 5, 51 / 6 * 5);
+		backBS = new GameButton(backImg, backImgC, Main.WIDTH / 2, (Main.HEIGHT / 10) * 8, 127 / 6 * 5, 51 / 6 * 5,
+				127 / 6 * 5, 51 / 6 * 5);
+		backBL = new GameButton(backImg, backImgC, Main.WIDTH / 2, (Main.HEIGHT / 10) * 7, 127 / 6 * 5, 51 / 6 * 5,
+				127 / 6 * 5, 51 / 6 * 5);
+		backBA = new GameButton(backImg, backImgC, (Main.WIDTH / 15) * 10, (Main.HEIGHT / 15) * 14, 127 / 6 * 5,
+				51 / 6 * 5, 127 / 6 * 5, 51 / 6 * 5);
+		howToPlayB = new GameButton(howToPlayImg, howToPlayImgC, (Main.WIDTH / 2), (Main.HEIGHT / 15), 327 / 6 * 5,
+				64 / 6 * 5, 327 / 6 * 5, 64 / 6 * 5);
+		aboutB = new GameButton(aboutImg, aboutImgC, Main.WIDTH / 2, (Main.HEIGHT / 10) * 3, 164/6 * 5, 51/6 * 5, 164/6 * 5, 51/6 * 5);
+		teamtreesB = new GameButton(teamTreesImg, teamTreesImgC, Main.WIDTH, Main.HEIGHT / 10 * 4, 387 / 6 * 5,
+				64 / 6 * 5, 387 / 6 * 5, 64 / 6 * 5);
 		plantForThePlanetB = new GameButton(plantForThePlanetImg, plantForThePlanetImgC, Main.WIDTH,
-				Main.HEIGHT / 10 * 6, 545, 52, 545, 52);
-		oneTreePlantedB = new GameButton(oneTreeImg, oneTreeImgC, Main.WIDTH, Main.HEIGHT / 10 * 2, 455, 51, 455, 51);
-		natureConB = new GameButton(natureConImg, natureConImgC, Main.WIDTH, Main.HEIGHT / 10 * 3, 658, 64, 658, 64);
-		rainforrestWebB = new GameButton(rainforrestWebImg, rainforrestWebImgC, Main.WIDTH, Main.HEIGHT / 10 * 5, 708,
-				51, 708, 51);
+				Main.HEIGHT / 10 * 6, 545 / 6 * 5, 52 / 6 * 5, 545 / 6 * 5, 52 / 6 * 5);
+		oneTreePlantedB = new GameButton(oneTreeImg, oneTreeImgC, Main.WIDTH, Main.HEIGHT / 10 * 2, 455 / 6 * 5,
+				51 / 6 * 5, 455 / 6 * 5, 51 / 6 * 5);
+		natureConB = new GameButton(natureConImg, natureConImgC, Main.WIDTH, Main.HEIGHT / 10 * 3, 658 / 6 * 5,
+				64 / 6 * 5, 658 / 6 * 5, 64 / 6 * 5);
+		rainforrestWebB = new GameButton(rainforrestWebImg, rainforrestWebImgC, Main.WIDTH, Main.HEIGHT / 10 * 5,
+				708 / 6 * 5, 51 / 6 * 5, 708 / 6 * 5, 51 / 6 * 5);
 		donationMessageB = new GameButton(helpMessageImgDonate, helpMessageImgDonate, Main.WIDTH, Main.HEIGHT / 10 * 4,
-				747, 146, 747, 146);
-		infoTextB = new GameButton(infoTextImg, infoTextImg, Main.WIDTH, Main.HEIGHT / 10 * 2, 936, 145, 936, 145);
-		graphB = new GameButton(graph1, graph1, ((Main.WIDTH / 10) * 9) - 569, ((Main.HEIGHT / 10) * 6), 569, 339, 569,
-				339);
-		logoB = new GameButton(logoImg, logoImg, Main.WIDTH - 182, 0, 182, 183, 182, 183);
-		aboutB1 = new GameButton(AboutL1Img, AboutL1Img, Main.WIDTH, (Main.HEIGHT / 15) * 3, 1209, 41, 1209, 41);
-		aboutB2 = new GameButton(AboutL2Img, AboutL2Img, Main.WIDTH, (Main.HEIGHT / 15) * 4, 1220, 41, 1220, 41);
-		aboutB3 = new GameButton(AboutL3Img, AboutL3Img, Main.WIDTH, (Main.HEIGHT / 15) * 5, 1217, 41, 1217, 41);
-		aboutB4 = new GameButton(AboutL4Img, AboutL4Img, Main.WIDTH, (Main.HEIGHT / 15) * 6, 1209, 41, 1209, 41);
-		aboutB5 = new GameButton(AboutL5Img, AboutL5Img, Main.WIDTH, (Main.HEIGHT / 15) * 7, 1209, 41, 1209, 41);
-		aboutB6 = new GameButton(AboutL6Img, AboutL6Img, Main.WIDTH, (Main.HEIGHT / 15) * 8, 1209, 41, 1209, 41);
-		aboutB7 = new GameButton(AboutL7Img, AboutL7Img, Main.WIDTH, (Main.HEIGHT / 15) * 9, 1209, 41, 1209, 41);
-		aboutB8 = new GameButton(AboutL8Img, AboutL8Img, Main.WIDTH, (Main.HEIGHT / 15) * 10, 1209, 41, 1209, 41);
-		aboutB9 = new GameButton(AboutL9Img, AboutL9Img, Main.WIDTH, (Main.HEIGHT / 15) * 11, 1209, 41, 1209, 41);
-		aboutB10 = new GameButton(AboutL10Img, AboutL10Img, Main.WIDTH, (Main.HEIGHT / 15) * 12, 1209, 41, 1209, 41);
-		aboutB11 = new GameButton(AboutL11Img, AboutL11Img, Main.WIDTH, (Main.HEIGHT / 15) * 13, 1209, 41, 1209, 41);
-		aboutB12 = new GameButton(AboutL12Img, AboutL12Img, Main.WIDTH, (Main.HEIGHT / 15) * 14, 428, 41, 428, 41);
+				747 / 6 * 5, 146 / 6 * 5, 747 / 6 * 5, 146 / 6 * 5);
+		infoTextB = new GameButton(infoTextImg, infoTextImg, Main.WIDTH, Main.HEIGHT / 10 * 2, 936 / 6 * 5, 145 / 6 * 5,
+				936 / 6 * 5, 145 / 6 * 5);
+		graphB = new GameButton(graph1, graph1, ((Main.WIDTH / 10) * 9) - 569, ((Main.HEIGHT / 10) * 6), 569 / 6 * 5,
+				339 / 6 * 5, 569 / 6 * 5, 339 / 6 * 5);
+		logoB = new GameButton(logoImg, logoImg, Main.WIDTH - 182, 0, 182 / 6 * 5, 183 / 6 * 5, 182 / 6 * 5,
+				183 / 6 * 5);
+		aboutB1 = new GameButton(AboutL1Img, AboutL1Img, Main.WIDTH, (Main.HEIGHT / 15) * 3, 1209 / 6 * 5, 41 / 6 * 5,
+				1209 / 6 * 5, 41 / 6 * 5);
+		aboutB2 = new GameButton(AboutL2Img, AboutL2Img, Main.WIDTH, (Main.HEIGHT / 15) * 4, 1220 / 6 * 5, 41 / 6 * 5,
+				1220 / 6 * 5, 41 / 6 * 5);
+		aboutB3 = new GameButton(AboutL3Img, AboutL3Img, Main.WIDTH, (Main.HEIGHT / 15) * 5, 1217 / 6 * 5, 41 / 6 * 5,
+				1217 / 6 * 5, 41 / 6 * 5);
+		aboutB4 = new GameButton(AboutL4Img, AboutL4Img, Main.WIDTH, (Main.HEIGHT / 15) * 6, 1209 / 6 * 5, 41 / 6 * 5,
+				1209 / 6 * 5, 41 / 6 * 5);
+		aboutB5 = new GameButton(AboutL5Img, AboutL5Img, Main.WIDTH, (Main.HEIGHT / 15) * 7, 1209 / 6 * 5, 41 / 6 * 5,
+				1209 / 6 * 5, 41 / 6 * 5);
+		aboutB6 = new GameButton(AboutL6Img, AboutL6Img, Main.WIDTH, (Main.HEIGHT / 15) * 8, 1209 / 6 * 5, 41 / 6 * 5,
+				1209 / 6 * 5, 41 / 6 * 5);
+		aboutB7 = new GameButton(AboutL7Img, AboutL7Img, Main.WIDTH, (Main.HEIGHT / 15) * 9, 1209 / 6 * 5, 41 / 6 * 5,
+				1209 / 6 * 5, 41 / 6 * 5);
+		aboutB8 = new GameButton(AboutL8Img, AboutL8Img, Main.WIDTH, (Main.HEIGHT / 15) * 10, 1209 / 6 * 5, 41 / 6 * 5,
+				1209 / 6 * 5, 41 / 6 * 5);
+		aboutB9 = new GameButton(AboutL9Img, AboutL9Img, Main.WIDTH, (Main.HEIGHT / 15) * 11, 1209 / 6 * 5, 41 / 6 * 5,
+				1209 / 6 * 5, 41 / 6 * 5);
+		aboutB10 = new GameButton(AboutL10Img, AboutL10Img, Main.WIDTH, (Main.HEIGHT / 15) * 12, 1209 / 6 * 5,
+				41 / 6 * 5, 1209 / 6 * 5, 41 / 6 * 5);
+		aboutB11 = new GameButton(AboutL11Img, AboutL11Img, Main.WIDTH, (Main.HEIGHT / 15) * 13, 1209 / 6 * 5,
+				41 / 6 * 5, 1209 / 6 * 5, 41 / 6 * 5);
+		aboutB12 = new GameButton(AboutL12Img, AboutL12Img, Main.WIDTH, (Main.HEIGHT / 15) * 14, 428 / 6 * 5,
+				41 / 6 * 5, 428 / 6 * 5, 41 / 6 * 5);
 
 		titleButtons = new ArrayList<GameButton>();
 		titleButtons.add(infoB);
@@ -570,7 +595,7 @@ public class AppPanel extends JPanel implements ActionListener, KeyListener, Mou
 		g.setColor(Color.cyan);
 		g.fillRect(0, 0, Main.WIDTH, Main.HEIGHT);
 		g.drawImage(AppPanel.titleImg, 0, 0, Main.WIDTH, Main.HEIGHT, null);
-		g.drawImage(AppPanel.planetaryTextImg, (Main.WIDTH / 2), Main.HEIGHT / 10, 411, 109, null);
+		g.drawImage(AppPanel.planetaryTextImg, (Main.WIDTH / 2), Main.HEIGHT / 10, 411/6 * 5, 109/6 * 5, null);
 		if (!canPlay) {
 			if (money >= 1000000) {
 				g.setFont(menuFont);
@@ -603,7 +628,7 @@ public class AppPanel extends JPanel implements ActionListener, KeyListener, Mou
 	void drawSelectionState(Graphics g) {
 
 		g.drawImage(AppPanel.titleImg, 0, 0, Main.WIDTH, Main.HEIGHT, null);
-		g.drawImage(AppPanel.planetaryTextImg, (Main.WIDTH / 2), Main.HEIGHT / 10, 411, 109, null);
+		g.drawImage(AppPanel.planetaryTextImg, (Main.WIDTH / 2), Main.HEIGHT / 10, 411/6 * 5, 109/6 * 5, null);
 
 	}
 
@@ -611,10 +636,10 @@ public class AppPanel extends JPanel implements ActionListener, KeyListener, Mou
 		g.fillRect(0, 0, Main.WIDTH, Main.HEIGHT);
 		g.setFont(menuFont);
 		g.setColor(Color.green);
-		g.drawString("Trees: " + treenum, 40, 60);
-		g.drawString("Money: " + money, 40, 30);
-		g.drawString("Fossil Fuel Burning Factories: " + factorynum, 40, 90);
-		g.drawString("Pollution: " + pollution, 40, 120);
+		g.drawString("Trees: " + treenum, 40/6 * 5, 60/6 * 5);
+		g.drawString("Money: " + money, 40/6 * 5, 30/6 * 5);
+		g.drawString("Fossil Fuel Burning Factories: " + factorynum, 40/6 * 5, 90/6 * 5);
+		g.drawString("Pollution: " + pollution, 40/6 * 5, 120/6 * 5);
 		try {
 			for (Tree t : trees) {
 				if (t.isSelected) {
@@ -871,7 +896,6 @@ public class AppPanel extends JPanel implements ActionListener, KeyListener, Mou
 
 			gb.update();
 		}
-		
 
 		for (int i = 0; i < trees.size(); i++) {
 			if (trees.get(i).box.contains(MouseInfo.getPointerInfo().getLocation())) {
@@ -1057,7 +1081,7 @@ public class AppPanel extends JPanel implements ActionListener, KeyListener, Mou
 				}
 
 			}
-			
+
 			for (Tree t : trees) {
 				if (t.isSelected) {
 					if (canReplaceTree) {

@@ -4,8 +4,8 @@ import javax.swing.JFrame;
 
 public class Main {
 	// change these to your screen size
-	static final int HEIGHT = 1080;
-	static final int WIDTH = 1920;
+	static final int HEIGHT = 900;
+	static final int WIDTH = 1600;
 	// variables here
 	static JFrame f = new JFrame();
 	static AppPanel p = new AppPanel();
@@ -25,7 +25,7 @@ public class Main {
 		f.add(p);
 		// setup frame to look decent
 		f.setUndecorated(true);
-		f.setExtendedState(JFrame.MAXIMIZED_BOTH);
+		//f.setExtendedState(JFrame.MAXIMIZED_BOTH);
 		f.addMouseListener(p);
 		f.addKeyListener(p);
 		// set the size of the frame
