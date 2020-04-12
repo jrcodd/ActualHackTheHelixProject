@@ -656,7 +656,6 @@ public class AppPanel extends JPanel implements ActionListener, KeyListener, Mou
 			}
 		} catch (ConcurrentModificationException h) {
 			// modifying the trees arrayList gives an error so i dont want to crash the app
-			h.printStackTrace();
 		}
 		for (Factory f : factories) {
 			if (f.isSelected) {
