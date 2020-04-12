@@ -78,12 +78,14 @@ public class AppPanel extends JPanel implements ActionListener, KeyListener, Mou
 	public static BufferedImage rainforrestWebImg;
 	public static BufferedImage rainforrestWebImgC;
 	public static BufferedImage helpMessageImgDonate;
-
+	public static BufferedImage plantForThePlanetImg;
+	public static BufferedImage plantForThePlanetImgC;
+	public static BufferedImage infoTextImg;
 
 
 	enum Transition {
 		TITLESTART, DONATETITLE, INFOTITLE, NONE, STARTGAME, TITLEINFO, TITLEDONATE, GAMEGAMEOVER, TITLEABOUT,
-		 INFODONATE,  DONATEINFO
+		INFODONATE, DONATEINFO
 	}
 
 	enum State {
@@ -119,6 +121,8 @@ public class AppPanel extends JPanel implements ActionListener, KeyListener, Mou
 	GameButton teamtreesB;
 	GameButton rainforrestWebB;
 	GameButton donationMessageB;
+	GameButton plantForThePlanetB;
+	GameButton infoTextB;
 	double pollution;
 	double money;
 	int factorynum;
@@ -144,10 +148,10 @@ public class AppPanel extends JPanel implements ActionListener, KeyListener, Mou
 	ScheduledExecutorService factoryMaker = Executors.newScheduledThreadPool(1);
 	ScheduledExecutorService treeMaker = Executors.newScheduledThreadPool(1);
 	boolean gameOver = false;
+	boolean canPlay = true;
 
 	Runnable makeFactory = new Runnable() {
 		public void run() {
-			System.out.println(toReplaceT);
 
 			makeFactoryDelay++;
 
@@ -158,20 +162,14 @@ public class AppPanel extends JPanel implements ActionListener, KeyListener, Mou
 				replaceTree(toReplaceT);
 				isReplacingTree = false;
 				canReplaceTree = true;
-				factoryMaker.shutdownNow();
+				factoryMaker.shutdown();
 			}
 		}
 
 	};
 	Runnable makeTree = new Runnable() {
 		public void run() {
-			System.out.println(toReplaceF);
-			if (pollution >= 100) {
-				gameOver = true;
-			}
-			if (money <= 0) {
-				gameOver = true;
-			}
+
 			makeTreeDelay++;
 
 			if (makeTreeDelay >= 10000) {
@@ -181,7 +179,7 @@ public class AppPanel extends JPanel implements ActionListener, KeyListener, Mou
 				replaceFactory(toReplaceF);
 				isReplacingFactory = false;
 				canReplaceFactory = true;
-				treeMaker.shutdownNow();
+				treeMaker.shutdown();
 			}
 		}
 	};
@@ -241,6 +239,9 @@ public class AppPanel extends JPanel implements ActionListener, KeyListener, Mou
 			rainforrestWebImg = ImageIO.read(this.getClass().getResourceAsStream("Rainforest Action Network.png"));
 			rainforrestWebImgC = ImageIO.read(this.getClass().getResourceAsStream("Rainforest Action NetworkC.png"));
 			helpMessageImgDonate = ImageIO.read(this.getClass().getResourceAsStream("HelpMessage.png"));
+			plantForThePlanetImg = ImageIO.read(this.getClass().getResourceAsStream("Plant For The Planet.png"));
+			plantForThePlanetImgC = ImageIO.read(this.getClass().getResourceAsStream("Plant For The PlanetC.png"));
+			infoTextImg = ImageIO.read(this.getClass().getResourceAsStream("infoText.png"));
 
 
 		} catch (IOException e) {
@@ -256,7 +257,7 @@ public class AppPanel extends JPanel implements ActionListener, KeyListener, Mou
 		donateB = new GameButton(donateImg, donateImgC, Main.WIDTH, (Main.HEIGHT / 10) * 4, 191, 49, 191, 49);
 		startB = new GameButton(startTextImg, startTextImgC, Main.WIDTH / 2, (Main.HEIGHT / 10) * 4, 134, 51, 134, 51);
 		infoB = new GameButton(infoImg, infoImgC, Main.WIDTH / 2, (Main.HEIGHT / 10) * 5, 100, 51, 100, 51);
-		backBL = new GameButton(backImg, backImgC, Main.WIDTH / 2, (Main.HEIGHT / 10) * 5, 127, 51, 127, 51);
+		backBL = new GameButton(backImg, backImgC, Main.WIDTH / 2, (Main.HEIGHT / 10) * 7, 127, 51, 127, 51);
 		backBS = new GameButton(backImg, backImgC, Main.WIDTH / 2, (Main.HEIGHT / 10) * 5, 127, 51, 127, 51);
 		levelsB = new GameButton(levelsImg, levelsImgC, Main.WIDTH / 2, (Main.HEIGHT / 10) * 3, 172, 59, 172, 59);
 		comingSoonB = new GameButton(comingSoonImg, comingSoonImgC, Main.WIDTH / 2, (Main.HEIGHT / 10) * 4, 396, 70,
@@ -264,9 +265,13 @@ public class AppPanel extends JPanel implements ActionListener, KeyListener, Mou
 		l1B = new GameButton(l1Text, l1TextC, Main.WIDTH / 2, (Main.HEIGHT / 10) * 3, 180, 55, 180, 55);
 		xB = new GameButton(xImg, xImg, (bubblex + 756 / 3) - (134 / 4), bubbley, 134 / 4, 143 / 4, 134 / 4, 143 / 4);
 		aboutB = new GameButton(aboutImg, aboutImgC, Main.WIDTH / 2, (Main.HEIGHT / 10) * 3, 164, 51, 164, 51);
-		teamtreesB = new GameButton(teamTreesImg, teamTreesImgC, Main.WIDTH, Main.HEIGHT / 10 * 3, 387, 64, 387, 64);
-		rainforrestWebB = new GameButton(rainforrestWebImg, rainforrestWebImgC, Main.WIDTH, Main.HEIGHT / 10 * 4, 708,
+		teamtreesB = new GameButton(teamTreesImg, teamTreesImgC, Main.WIDTH, Main.HEIGHT / 10 * 4, 387, 64, 387, 64);
+		plantForThePlanetB = new GameButton(plantForThePlanetImg, plantForThePlanetImgC, Main.WIDTH,
+				Main.HEIGHT / 10 * 6, 545, 52, 545, 52);
+		rainforrestWebB = new GameButton(rainforrestWebImg, rainforrestWebImgC, Main.WIDTH, Main.HEIGHT / 10 * 5, 708,
 				51, 708, 51);
+		donationMessageB = new GameButton(helpMessageImgDonate, helpMessageImgDonate, Main.WIDTH, Main.HEIGHT / 10 * 2,
+				620, 145, 620, 145);
 		titleButtons = new ArrayList<GameButton>();
 
 		titleButtons.add(infoB);
@@ -277,9 +282,11 @@ public class AppPanel extends JPanel implements ActionListener, KeyListener, Mou
 		donateButtons.add(teamtreesB);
 		donateButtons.add(rainforrestWebB);
 		donateButtons.add(backBL);
+		donateButtons.add(donationMessageB);
+		donateButtons.add(plantForThePlanetB);
 		titleButtons.add(aboutB);
 		infoButtons = new ArrayList<GameButton>();
-		
+
 		infoButtons.add(donateB);
 		infoButtons.add(backBS);
 		levelButtons = new ArrayList<GameButton>();
@@ -374,22 +381,23 @@ public class AppPanel extends JPanel implements ActionListener, KeyListener, Mou
 					gb.setX(gb.getX() + wordMoveSpeed);
 				}
 			}
-			currentState = State.TITLE;
 
 			break;
 		case INFODONATE:
 
 			for (GameButton gb : infoButtons) {
 				if (gb.getX() >= 0 - gb.getWidth()) {
+
 					gb.setX(gb.getX() - wordMoveSpeed);
 				}
 
 			}
 			for (GameButton gb : donateButtons) {
+
 				if (gb.getX() >= Main.WIDTH / 2) {
 					gb.setX(gb.getX() - wordMoveSpeed);
-				}
 
+				}
 			}
 
 			break;
@@ -436,17 +444,22 @@ public class AppPanel extends JPanel implements ActionListener, KeyListener, Mou
 		g.setColor(Color.cyan);
 		g.fillRect(0, 0, Main.WIDTH, Main.HEIGHT);
 		g.drawImage(AppPanel.titleImg, 0, 0, Main.WIDTH, Main.HEIGHT, null);
-		g.drawImage(AppPanel.planetaryTextImg, Main.WIDTH / 2, Main.HEIGHT / 10, 411, 109, null);
-		if (gameOver) {
+		g.drawImage(AppPanel.planetaryTextImg, (Main.WIDTH / 2), Main.HEIGHT / 10, 411, 109, null);
+		if (!canPlay) {
 			if (money < 0) {
 				g.setFont(menuFont);
 				g.setColor(Color.orange);
-				g.drawString("You spent all your money in the game.", Main.WIDTH / 2, (Main.HEIGHT / 4) * 3);
+				g.drawString("You spent all your money in the game.", Main.WIDTH / 2, (Main.HEIGHT / 8) * 6);
+				g.drawString("There is only one planet so try harder to protect it.", Main.WIDTH / 2,
+						(Main.HEIGHT / 8) * 7);
+
 			} else if (pollution > 100) {
 				g.setFont(menuFont);
 				g.setColor(Color.orange);
 				g.drawString("You polluted the environment too much in the game.", Main.WIDTH / 2,
-						(Main.HEIGHT / 4) * 3);
+						(Main.HEIGHT / 8) * 6);
+				g.drawString("There is only one planet so try harder to protect it.", Main.WIDTH / 2,
+						(Main.HEIGHT / 8) * 7);
 
 			}
 		}
@@ -456,7 +469,7 @@ public class AppPanel extends JPanel implements ActionListener, KeyListener, Mou
 	void drawGameSelectionState(Graphics g) {
 
 		g.drawImage(AppPanel.titleImg, 0, 0, Main.WIDTH, Main.HEIGHT, null);
-		g.drawImage(AppPanel.planetaryTextImg, Main.WIDTH / 2, Main.HEIGHT / 10, 411, 109, null);
+		g.drawImage(AppPanel.planetaryTextImg, (Main.WIDTH / 2), Main.HEIGHT / 10, 411, 109, null);
 
 	}
 
@@ -481,7 +494,6 @@ public class AppPanel extends JPanel implements ActionListener, KeyListener, Mou
 					case 2:
 						g.drawImage(tree3SelectedImg, t.x, t.y, t.width, t.height, null);
 						break;
-
 					default:
 						break;
 					}
@@ -496,7 +508,6 @@ public class AppPanel extends JPanel implements ActionListener, KeyListener, Mou
 					case 2:
 						g.drawImage(tree3Img, t.x, t.y, t.width, t.height, null);
 						break;
-
 					default:
 						break;
 					}
@@ -584,7 +595,6 @@ public class AppPanel extends JPanel implements ActionListener, KeyListener, Mou
 			if (trees.get(i).equals(t)) {
 				factories.add(new Factory(t.x, t.y, 254 / 2, 278 / 2, type));
 				trees.remove(i);
-				System.out.println(factories.size());
 				break;
 			}
 		}
@@ -609,7 +619,6 @@ public class AppPanel extends JPanel implements ActionListener, KeyListener, Mou
 					break;
 				}
 				factories.remove(i);
-				System.out.println(trees.size());
 				break;
 			}
 		}
@@ -748,16 +757,23 @@ public class AppPanel extends JPanel implements ActionListener, KeyListener, Mou
 			treenum = trees.size();
 
 		}
-		if (money < 0) {
-			gameOver = true;
-		}
-		if (pollution >= 100) {
-			gameOver = true;
+		if (canPlay) {
+			if (money < 0) {
+				gameOver = true;
+			}
+			if (pollution >= 100) {
+				gameOver = true;
+			}
 		}
 		if (gameOver) {
-			System.out.println("GameOver");
+			executor.shutdown();
 			transitions = Transition.GAMEGAMEOVER;
+			currentState = State.TITLE;
+			canPlay = false;
+			gameOver = false;
+
 		}
+
 	}
 
 	@Override
@@ -781,7 +797,7 @@ public class AppPanel extends JPanel implements ActionListener, KeyListener, Mou
 			if (quitB.isSelected()) {
 				System.exit(0);
 			}
-			if (!gameOver) {
+			if (canPlay) {
 				if (startB.isSelected()) {
 					transitions = Transition.STARTGAME;
 					currentState = State.GAME;
@@ -798,11 +814,6 @@ public class AppPanel extends JPanel implements ActionListener, KeyListener, Mou
 			if (aboutB.isSelected()) {
 				transitions = Transition.TITLEABOUT;
 				currentState = State.ABOUT;
-			}
-
-			if (backBL.isSelected()) {
-				// transitions = Transition.LEVELSSTART;
-				currentState = State.START;
 			}
 			if (donateB.isSelected()) {
 
@@ -830,6 +841,19 @@ public class AppPanel extends JPanel implements ActionListener, KeyListener, Mou
 				Desktop desktop = Desktop.getDesktop();
 				try {
 					desktop.browse(new URL("https://www.ran.org/ways-to-give/").toURI());
+				} catch (MalformedURLException e1) {
+					e1.printStackTrace();
+				} catch (IOException e1) {
+					e1.printStackTrace();
+				} catch (URISyntaxException e1) {
+					e1.printStackTrace();
+				}
+
+			}
+			if(plantForThePlanetB.isSelected()) {
+				Desktop desktop = Desktop.getDesktop();
+				try {
+					desktop.browse(new URL("https://www.plant-for-the-planet.org/en/support/tree-voucher \r\n").toURI());
 				} catch (MalformedURLException e1) {
 					e1.printStackTrace();
 				} catch (IOException e1) {
