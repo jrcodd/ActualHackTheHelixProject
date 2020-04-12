@@ -575,7 +575,7 @@ public class AppPanel extends JPanel implements ActionListener, KeyListener, Mou
 			if (money >= 1000000) {
 				g.setFont(menuFont);
 				g.setColor(Color.orange);
-				g.drawString("You earned 1,000,000 money while keeping the pollution.", Main.WIDTH / 2,
+				g.drawString("You earned 1,000,000 money while keeping the pollution", Main.WIDTH / 2,
 						(Main.HEIGHT / 15) * 12);
 				g.drawString("rates low enough to stay healthy. Nice job!", Main.WIDTH / 2, (Main.HEIGHT / 15) * 13);
 
