@@ -1,15 +1,14 @@
 package theOnlyPackage;
 
-import java.awt.Toolkit;
-
 import javax.swing.JFrame;
 
 public class Main {
-	final static int HEIGHT = Toolkit.getDefaultToolkit().getScreenSize().height;
-	final static int WIDTH = Toolkit.getDefaultToolkit().getScreenSize().width;
+	// change these to your screen size
+	static final int HEIGHT = 1080;
+	static final int WIDTH = 1920;
 	// variables here
-	JFrame f = new JFrame();
-	AppPanel p = new AppPanel();
+	static JFrame f = new JFrame();
+	static AppPanel p = new AppPanel();
 
 	// main method
 	public static void main(String[] args) {

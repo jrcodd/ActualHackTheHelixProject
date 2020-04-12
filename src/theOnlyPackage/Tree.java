@@ -11,8 +11,9 @@ public class Tree {
 	Rectangle box;
 	boolean firstTime = true;
 	int type;
-
-	Tree(int x, int y, int width, int height, int type) {
+	int widthC;
+	int heightC;
+	Tree(int x, int y, int width, int height, int widthC, int heightC, int type) {
 		this.x = x;
 		this.y = y;
 		this.width = width;
@@ -20,6 +21,8 @@ public class Tree {
 		isSelected = false;
 		box = new Rectangle(x, y, width, height);
 		this.type = type;
+		this.widthC = widthC;
+		this.heightC = heightC;
 	}
 
 }
